@@ -34,7 +34,6 @@ int main()
         
         while(1)
         {
-            printf("sdf\n");
             if (!capture.isOpened()) return 0;
             capture >> frame;
             transmat.Transmit(frame,clifd);

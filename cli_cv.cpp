@@ -30,11 +30,20 @@ int main()
         send(recvfd,"OK",2,0);
 
         Mat image;
+        int i = 0;
         while(1)
         {
             image = recvmat.Receive(recvfd);
-            imshow("test",image);
-            waitKey(30);
+            //if(i == 23)
+            //{
+            //    for(int j = 0;j < i;++j)
+            //    {    
+                    imshow("test",image);
+                    waitKey(30);
+                //}
+            //    i == -1;
+           // }
+           // i++;
         }
     }
     return 0;

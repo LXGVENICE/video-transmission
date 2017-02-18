@@ -76,7 +76,7 @@ bool SockMat::ScanImage_W(cv::Mat& image)
         p = image.ptr<uchar>(i);
         for(int j = 0;j < cols; ++j)
         {
-            p[i*rows + j] = _buf[i*rows + j];
+            p[j] = _buf[i*rows + j];
         } 
     }
     return true;
