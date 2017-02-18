@@ -1,5 +1,6 @@
 #include "sockmat.hpp"
 #include <stdio.h>
+#include <iostream>
 #include <strings.h>
 #include <cv.hpp>
 #include <sys/types.h>
@@ -16,7 +17,8 @@ bool SockMat::Transmit(cv::Mat& image,int sendfd)
 {
     if(image.empty()) return false;
     ScanImage_R(image);
-    if(send(sendfd,_buf,sizeof(_buf),0) == -1)
+    printf("%d\n",image.total());
+    if(send(sendfd,_buf,BUFFER_SIZE,0) == -1)
     {
         perror("send error ser1:");
         return false;
@@ -34,6 +36,7 @@ cv::Mat SockMat::Receive(int recvfd)
         exit(1);
     }
     cv::Mat image(_height,_width,CV_8UC3,cv::Scalar(0,0,255)); 
+    printf("%d\n",image.total());
     ScanImage_W(image);
     return image;
 }
