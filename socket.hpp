@@ -20,8 +20,4 @@ private:
     struct sockaddr_in _socketaddr;
 };
 
-class Rtp
-{
-    
-}
 

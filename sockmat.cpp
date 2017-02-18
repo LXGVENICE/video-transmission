@@ -1,12 +1,13 @@
 #include "sockmat.hpp"
+#include <stdio.h>
 #include <strings.h>
 #include <cv.hpp>
 #include <sys/types.h>
 #include <sys/socket.h>
 
-typedef unsigned char uchar
+//typedef unsigned char uchar;
 
-SockMat::SockMat():_width(width),_height(height),BUFFER_SIZE(resolution)
+SockMat::SockMat(int width,int height):_width(width),_height(height)
 {
     bzero(_buf,0);
 }
@@ -14,16 +15,32 @@ SockMat::SockMat():_width(width),_height(height),BUFFER_SIZE(resolution)
 bool SockMat::Transmit(cv::Mat& image,int sendfd)
 {
     if(image.empty()) return false;
+    ScanImage_R(image);
     if(send(sendfd,_buf,sizeof(_buf),0) == -1)
     {
         perror("send error:");
         return false;
     }
+    bzero(_buf,0);
+    return true;
 }
 
-bool SockMat::ScanImage(cv::Mat image)
+cv::Mat Receive(int recvfd)
 {
-    if(image.empty()) return -1;
+    int len = 1;
+    if(recv(recvfd,_buf,BUFFER_SIZE,0) <= 0)
+    {
+        perror("recv failed:");
+        exit(1);
+    }
+    cv::Mat image(_height,_width,CV_8UC3,Scalar(0,0,255)); 
+    ScanImage_W(image);
+    return image;
+}
+
+bool SockMat::ScanImage_R(cv::Mat& image)
+{
+    if(image.empty()) return false;
 
     int channels = image.channels();
     int rows = _height;
@@ -45,3 +62,24 @@ bool SockMat::ScanImage(cv::Mat image)
     }
     return true;
 }
+
+bool SockMatScanImage_W(cv::Mat& image)
+{
+    if(image.empty()) return false;
+
+    int channels = 3;
+    int rows = _height;
+    int cols = _width * channels;
+
+    uchar* p = NULL;
+    for(int i = 0;i < rows; ++i)
+    {
+        p = image.ptr<uchar>(i);
+        for(int j = 0;j < cols; ++j)
+        {
+            p[i*rows + j] = _buf[i*rows + j];
+        } 
+    }
+    return true;
+}
+
