@@ -1,6 +1,7 @@
 #include "socket.hpp"
 #include "sockmat.hpp"
 #include <cv.hpp>
+#include <iostream>
 using namespace cv;
 
 int main()
@@ -17,15 +18,15 @@ int main()
     {
         if(recv(recvfd,buf,sizeof(buf),0) <= 0)
         {
-            perror("recv failed:");
+            perror("recv failed cli1:");
             exit(1);
         }
         if(buf[0] != 3)
         {
-            cout << "channels error" <<endl;
+            std::cout << "channels error" <<std::endl;
             exit(1);
         }
-        cout<< "vedio channels = " << buf[0] << std::endl;
+        std::cout<< "vedio channels = " << buf[0] << std::endl;
         send(recvfd,"OK",2,0);
 
         Mat image;

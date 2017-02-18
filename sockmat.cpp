@@ -18,22 +18,22 @@ bool SockMat::Transmit(cv::Mat& image,int sendfd)
     ScanImage_R(image);
     if(send(sendfd,_buf,sizeof(_buf),0) == -1)
     {
-        perror("send error:");
+        perror("send error ser1:");
         return false;
     }
     bzero(_buf,0);
     return true;
 }
 
-cv::Mat Receive(int recvfd)
+cv::Mat SockMat::Receive(int recvfd)
 {
     int len = 1;
     if(recv(recvfd,_buf,BUFFER_SIZE,0) <= 0)
     {
-        perror("recv failed:");
+        perror("recv failed cil2:");
         exit(1);
     }
-    cv::Mat image(_height,_width,CV_8UC3,Scalar(0,0,255)); 
+    cv::Mat image(_height,_width,CV_8UC3,cv::Scalar(0,0,255)); 
     ScanImage_W(image);
     return image;
 }
@@ -50,20 +50,19 @@ bool SockMat::ScanImage_R(cv::Mat& image)
         cols *= rows;
         rows = 1;
     }
-
     uchar* p = NULL; 
     for(int i = 0;i < rows; ++i)
     {
         p = image.ptr<uchar>(i);
         for(int j = 0;j < cols; ++j)
         {
-            _buf[i*rows + j] = p[i*rows + j];
+            _buf[i*rows + j] = p[j];
         } 
     }
     return true;
 }
 
-bool SockMatScanImage_W(cv::Mat& image)
+bool SockMat::ScanImage_W(cv::Mat& image)
 {
     if(image.empty()) return false;
 

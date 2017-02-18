@@ -15,15 +15,15 @@ int main()
     if(!capture.isOpened()) exit(1);
     capture.set(CV_CAP_PROP_FRAME_WIDTH, 640);  
     capture.set(CV_CAP_PROP_FRAME_HEIGHT, 480); 
-    captur >> frame;
+    Mat frame;
+    capture >> frame;
     int buf[1] = {frame.channels()};
-    std::cout << "video channels = " << buf[1] << std::endl;
+    std::cout << "video channels = " << buf[0] << std::endl;
     char str[3] = {0};
 
-    Mat frame;
     while(1)
     {
-        clifd = ser.Accept();
+        int clifd = ser.Accept();
         send(clifd,buf,sizeof(buf),0);
         if(recv(clifd,str,2,0) <= 0)
         {
@@ -34,6 +34,7 @@ int main()
         
         while(1)
         {
+            printf("sdf\n");
             if (!capture.isOpened()) return 0;
             capture >> frame;
             transmat.Transmit(frame,clifd);

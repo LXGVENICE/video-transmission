@@ -2,7 +2,7 @@
 #include <cv.hpp>
 
 //typedef unsigned char uchar;
-#define BUFFER_SIZE 640*480
+#define BUFFER_SIZE 640*480*3
 
 class SockMat
 {
