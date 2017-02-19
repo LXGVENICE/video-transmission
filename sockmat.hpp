@@ -14,7 +14,8 @@ private:
     bool ScanImage_R(cv::Mat& image);
     bool ScanImage_W(cv::Mat& image);
 private:
-    uchar _buf[BUFFER_SIZE];
+    uchar *_buf;
     int _width;
     int _height;
+    int _size;
 };

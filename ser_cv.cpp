@@ -13,12 +13,12 @@ int main()
     ser.Listen();
     VideoCapture capture(0);
     if(!capture.isOpened()) exit(1);
-    capture.set(CV_CAP_PROP_FRAME_WIDTH, 640);  
-    capture.set(CV_CAP_PROP_FRAME_HEIGHT, 480); 
+    int width = capture.get(CV_CAP_PROP_FRAME_WIDTH);  
+    int height = capture.get(CV_CAP_PROP_FRAME_HEIGHT); 
     Mat frame;
     capture >> frame;
-    int buf[1] = {frame.channels()};
-    std::cout << "video channels = " << buf[0] << std::endl;
+    int buf[3] = {frame.channels(),width,height};
+    printf("channel = %d,width = %d,height = %d\n",buf[0],buf[1],buf[2]);
     char str[3] = {0};
 
     while(1)

@@ -7,12 +7,10 @@ using namespace cv;
 int main()
 {
     Socket cli;
-    SockMat recvmat(640,480);
-
     cli.CreateAddr("127.0.0.1",8888);
     cli.Connect();
     int recvfd = cli.Getfd();
-    int buf[1] = {0};
+    int buf[3] = {0};
 
     while(1)
     {
@@ -26,9 +24,10 @@ int main()
             std::cout << "channels error" <<std::endl;
             exit(1);
         }
-        std::cout<< "vedio channels = " << buf[0] << std::endl;
+        printf("channel = %d,width = %d,height = %d\n",buf[0],buf[1],buf[2]);
         send(recvfd,"OK",2,0);
 
+        SockMat recvmat(buf[1],buf[2]);
         Mat image;
         int i = 0;
         while(1)

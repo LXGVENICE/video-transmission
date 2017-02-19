@@ -8,35 +8,36 @@
 
 //typedef unsigned char uchar;
 
-SockMat::SockMat(int width,int height):_width(width),_height(height)
+SockMat::SockMat(int width,int height):_width(width),_height(height),_size(height*width*3)
 {
-    bzero(_buf,0);
+    _buf = new uchar[_size];
+    bzero(_buf,_size);
 }
 
 bool SockMat::Transmit(cv::Mat& image,int sendfd)
 {
     if(image.empty()) return false;
     ScanImage_R(image);
-    printf("%d\n",image.total());
-    if(send(sendfd,_buf,BUFFER_SIZE,0) == -1)
+    //printf("%d\n",image.total());
+    if(send(sendfd,_buf,_size,0) == -1)
     {
         perror("send error ser1:");
         return false;
     }
-    bzero(_buf,0);
+    bzero(_buf,_size);
     return true;
 }
 
 cv::Mat SockMat::Receive(int recvfd)
 {
     int len = 1;
-    if(recv(recvfd,_buf,BUFFER_SIZE,0) <= 0)
+    if(recv(recvfd,_buf,_size,0) <= 0)
     {
         perror("recv failed cil2:");
         exit(1);
     }
     cv::Mat image(_height,_width,CV_8UC3,cv::Scalar(0,0,255)); 
-    printf("%d\n",image.total());
+    //printf("%d\n",image.total());
     ScanImage_W(image);
     return image;
 }
